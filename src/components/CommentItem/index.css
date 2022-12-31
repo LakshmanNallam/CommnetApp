@@ -35,12 +35,11 @@
   margin-bottom: 15px;
 }
 .roundedCon {
-  background-color: white;
   border-radius: 100%;
   border: 1px solid grey;
   padding: 10px;
   width: 3.5%;
-  background-color: #10b981;
+
   margin-right: 5px;
 }
 .heading {
@@ -62,3 +61,4 @@
   width: 5%;
   align-items: center;
 }
+
