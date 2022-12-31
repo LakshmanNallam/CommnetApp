@@ -1,6 +1,6 @@
 import {Component} from 'react'
 import {v4 as uid} from 'uuid'
-import {formatDistanceToNow} from 'date-fns'
+
 import CommentItem from '../CommentItem'
 import './index.css'
 
@@ -25,40 +25,76 @@ class Comments extends Component {
     this.setState({name: event.target.value})
   }
 
+  likefun = id => {
+    const {initalList} = this.state
+    this.setState({
+      initalList: initalList.map(eachItem => {
+        if (eachItem.id === id) {
+          return {...eachItem, isLiked: !eachItem.isLiked}
+        }
+        return eachItem
+      }),
+    })
+  }
+
   addNewItem = event => {
     event.preventDefault()
+    const bgColor = Math.ceil(
+      Math.random() * initialContainerBackgroundClassNames.length - 1,
+    )
+    console.log(bgColor)
     const {name, comment} = this.state
     this.setState(prevState => ({
       initalList: [
         ...prevState.initalList,
-        {id: uid(), Name: name, Comment: comment, isLiked: false},
+        {
+          id: uid(),
+          Name: name,
+          Comment: comment,
+          isLiked: false,
+          time: new Date(),
+          bgColor: initialContainerBackgroundClassNames[bgColor],
+        },
       ],
       name: '',
       comment: '',
+      count: prevState.count + 1,
+    }))
+  }
+
+  deleteComment = id => {
+    const {initalList} = this.state
+    console.log(initalList)
+    this.setState(prevState => ({
+      initalList: initalList.filter(eachItem => eachItem.id !== id),
+      count: prevState.count - 1,
     }))
   }
 
   render() {
     const {name, comment, count, initalList} = this.state
-    console.log(name)
+
+    console.log(initalList)
     return (
       <div className="mainDiv">
         <div className="uppperSec">
           <div className="form Con">
             <form className="leftCon" onSubmit={this.addNewItem}>
               <h1>Comments</h1>
-              <p>Say somthing about 4.0 Technologies</p>
+              <p>Say Something about 4.0 Tech</p>
               <input
                 type="text"
                 className="Name"
                 onChange={this.inputNameCd}
                 value={name}
+                placeholder="Your Name"
               />
               <textarea
                 type="text"
                 className="YourComment"
                 onChange={this.inputCommentCd}
                 value={comment}
+                placeholder="Your Comment"
               />
               <div className="hi">
                 <button type="submit">Add Comment</button>
@@ -71,15 +107,21 @@ class Comments extends Component {
           />
         </div>
         <hr className="spe" />
-        <div className="lowerCon">
+        <ul className="lowerCon">
           <p>{count} Comments</p>
           {initalList.map(eachItem => (
-            <CommentItem eachItem={eachItem} />
+            <CommentItem
+              key={eachItem.id}
+              eachItem={eachItem}
+              likefun={this.likefun}
+              deleteComment={this.deleteComment}
+            />
           ))}
-        </div>
+        </ul>
       </div>
     )
   }
 }
 
 export default Comments
+
